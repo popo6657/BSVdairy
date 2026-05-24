@@ -1,0 +1,155 @@
+﻿<Window x:Class="diary.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="BSV加密日记" Height="650" Width="950"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF8E71C">
+	<Window.Resources>
+		<Style x:Key="PopButton" TargetType="Button">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}"
+                                BorderBrush="Black" BorderThickness="3"
+                                CornerRadius="10" Padding="15,8">
+							<Border.RenderTransform>
+								<RotateTransform Angle="-1"/>
+							</Border.RenderTransform>
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style TargetType="TextBox">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="3"/>
+			<Setter Property="Background" Value="#FFFFF9C4"/>
+			<Setter Property="Padding" Value="8"/>
+		</Style>
+
+		<Style TargetType="ListBox">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="3"/>
+			<Setter Property="Background" Value="#FFFFF9C4"/>
+		</Style>
+
+		<Style TargetType="GroupBox">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="3"/>
+			<Setter Property="Background" Value="#FFE1F5FE"/>
+		</Style>
+	</Window.Resources>
+
+	<Grid Margin="12">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- 顶部信息栏 -->
+		<Border Grid.Row="0" BorderBrush="Black" BorderThickness="3"
+                CornerRadius="12" Margin="0,0,0,10" Padding="12">
+			<Border.Background>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+					<GradientStop Color="#FFFF6B6B" Offset="0"/>
+					<GradientStop Color="#FF4ECDC4" Offset="0.5"/>
+					<GradientStop Color="#FFFFE66D" Offset="1"/>
+				</LinearGradientBrush>
+			</Border.Background>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0" Text="👁️ 💎 👁️" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+				<StackPanel Grid.Column="1">
+					<TextBlock x:Name="txtWalletInfo" FontFamily="Comic Sans MS" FontSize="12"
+                               Foreground="White" FontWeight="Bold"/>
+					<TextBlock x:Name="txtStatus" FontFamily="Comic Sans MS" FontSize="11"
+                               Foreground="#FFFFF9C4" Text="✨ 准备就绪 ✨"/>
+				</StackPanel>
+
+				<Border Grid.Column="2" Background="White" CornerRadius="20"
+                        BorderBrush="Black" BorderThickness="2" Padding="8,3">
+					<TextBlock Text="BSV TESTNET" FontFamily="Comic Sans MS"
+                               FontWeight="Bold" FontSize="11" Foreground="#FFFF6B6B"/>
+				</Border>
+			</Grid>
+		</Border>
+
+		<!-- 主内容区 -->
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="260"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- 左侧面板 -->
+			<Grid Grid.Column="0" Margin="0,0,10,0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<!-- 写日记区 -->
+				<GroupBox Grid.Row="0" Header="✏️ 写日记 ✏️" Foreground="#FFFF6B6B">
+					<TextBox x:Name="txtDiaryInput" TextWrapping="Wrap" AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"/>
+				</GroupBox>
+
+				<!-- 按钮区 -->
+				<StackPanel Grid.Row="1" Orientation="Horizontal"
+                            HorizontalAlignment="Center" Margin="0,12">
+					<Button x:Name="btnSave" Content="🔒 加密保存到区块链 🔒"
+                            Click="BtnSave_Click" Width="200" Height="40"
+                            Background="#FFFF6B6B" Style="{StaticResource PopButton}"/>
+					<Button x:Name="btnLoadAll" Content="📥 加载所有日记 📥"
+                            Click="BtnLoadAll_Click" Width="170" Height="40"
+                            Background="#FF4ECDC4" Style="{StaticResource PopButton}" Margin="12,0,0,0"/>
+				</StackPanel>
+
+				<!-- 日记显示区 -->
+				<GroupBox Grid.Row="2" Header="📖 日记内容 📖" Foreground="#FF4ECDC4">
+					<TextBox x:Name="txtDiaryDisplay" TextWrapping="Wrap"
+                             IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                             Background="#FFFFF9C4"/>
+				</GroupBox>
+			</Grid>
+
+			<!-- 右侧日记列表 -->
+			<GroupBox Grid.Column="1" Header="📋 日记列表 📋" Foreground="#FFFFE66D">
+				<ListBox x:Name="listDiaries" SelectionChanged="ListDiaries_SelectionChanged">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Border BorderBrush="#FFE0E0E0" BorderThickness="0,0,0,2" Padding="6" Margin="2">
+								<StackPanel>
+									<TextBlock Text="{Binding Timestamp}" FontWeight="Bold" FontSize="11"
+                                               Foreground="#FFFF6B6B"/>
+									<TextBlock Text="{Binding Preview}" FontSize="10"
+                                               Foreground="#FF888888" TextTrimming="CharacterEllipsis"/>
+								</StackPanel>
+							</Border>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</GroupBox>
+		</Grid>
+	</Grid>
+</Window>
